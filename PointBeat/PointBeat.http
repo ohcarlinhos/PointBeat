@@ -1,6 +1,23 @@
-@PointBeat_HostAddress = http://localhost:5020
+@HostAddress = http://localhost:5020
 
-GET {{PointBeat_HostAddress}}/weatherforecast/
+###
+POST {{HostAddress}}/users/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Carlos Roberto",
+  "email": "carlos@teste.com"
+}
+
+###
+GET {{HostAddress}}/users/
 Accept: application/json
 
 ###
+GET {{HostAddress}}/users/{{UserId}}
+Accept: application/json
+
+###
+DELETE {{HostAddress}}/users/{{UserId}}
+Accept: application/json
