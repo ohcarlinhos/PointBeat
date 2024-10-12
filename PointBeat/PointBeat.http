@@ -1,0 +1,6 @@
+@PointBeat_HostAddress = http://localhost:5020
+
+GET {{PointBeat_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
