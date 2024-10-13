@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using PointBeat.App.Dtos;
 using PointBeat.App.Entities;
 using PointBeat.App.Interfaces;
+using PointBeat.App.Validators;
 using Raven.Client.Documents;
 
 namespace PointBeat.App.Routes;
@@ -11,22 +13,26 @@ public abstract class PointRoutesMap : IRoutesMap
     {
         app.MapPost("/points", (IDocumentStore store, [FromBody] PointDto dto) =>
         {
+            var result = new PointDtoValidator().Validate(dto);
+            if (!result.IsValid) return Results.BadRequest(result.Errors);
+
             var session = store.OpenSession();
 
             if (!session.Query<User>().Any(e => e.Id == dto.UserId)) return Results.NotFound("user_not_found");
-            if (!session.Query<Company>().Any(e => e.Id == dto.CompanyId)) return Results.NotFound("company_not_found");
+            if (!session.Query<Company>().Any(e => e.Id == dto.CompanyId))
+                return Results.NotFound("company_not_found");
 
-            var point = new Point()
+            var point = new Point
             {
-                Hour = dto.Hour,
+                Hour = DateTime.Parse(dto.Hour),
                 UserId = dto.UserId,
                 CompanyId = dto.CompanyId
             };
-
+            
             session.Store(point);
             session.SaveChanges();
 
-            return Results.Created($"/users/{Uri.UnescapeDataString(point.Id)}", point);
+            return Results.Created($"/users/{Uri.EscapeDataString(point.Id!)}", point);
         }).WithTags("Point");
 
         app.MapGet("/points", (IDocumentStore store) =>

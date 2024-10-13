@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PointBeat.App.Entities;
 using PointBeat.App.Interfaces;
+using PointBeat.App.Validators;
 using Raven.Client.Documents;
 
 namespace PointBeat.App.Routes;
@@ -9,22 +10,17 @@ public abstract class UserRoutesMap : IRoutesMap
 {
     public static void Handle(WebApplication app)
     {
-        app.MapPost("/users", (IDocumentStore store, [FromBody] UserDto dto) =>
+        app.MapPost("/users", (IDocumentStore store, [FromBody] User user) =>
         {
+            var result = new UserValidator().Validate(user);
+            if (!result.IsValid) return Results.BadRequest(result.Errors);
+
             var session = store.OpenSession();
-            var user = new User
-            {
-                Name = dto.Name, Email = dto.Email, Address = new Address
-                {
-                    Street = dto.AddressStreet,
-                    Number = dto.AddressNumber,
-                }
-            };
 
             session.Store(user);
             session.SaveChanges();
 
-            return Results.Created($"/users/{Uri.UnescapeDataString(user.Id)}", user);
+            return Results.Created($"/users/{Uri.EscapeDataString(user.Id!)}", user);
         }).WithTags("User");
 
         app.MapGet("/users", (IDocumentStore store) =>

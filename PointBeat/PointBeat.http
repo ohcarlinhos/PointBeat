@@ -15,12 +15,14 @@ GET {{HostAddress}}/users/
 Accept: application/json
 
 ###
-GET {{HostAddress}}/users/{{UserId}}
+GET {{HostAddress}}/users/{{QueryUserId}}
 Accept: application/json
 
 ###
-DELETE {{HostAddress}}/users/{{UserId}}
+DELETE {{HostAddress}}/users/{{QueryUserId}}
 Accept: application/json
+
+
 
 ###
 POST {{HostAddress}}/company/
@@ -28,7 +30,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "name": "Carlos Roberto",
+  "name": "Carlinhos Tech Solutions LTDA",
   "address": {
     "street": "Rua da Saudade",
     "number": 123
@@ -40,5 +42,34 @@ GET {{HostAddress}}/company/
 Accept: application/json
 
 ###
+GET {{HostAddress}}/company/{{QueryCompanyId}}
+Accept: application/json
+
+###
+DELETE {{HostAddress}}/company/{{QueryCompanyId}}
+Accept: application/json
+
+
+
+###
+POST {{HostAddress}}/points/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "hour": "2024-10-13T02:41:04Z",
+  "companyId": "{{CompanyId}}",
+  "userId": "{{UserId}}"
+}
+
+###
+GET {{HostAddress}}/company/
+Accept: application/json
+
+###
 GET {{HostAddress}}/company/{{CompanyId}}
+Accept: application/json
+
+###
+DELETE {{HostAddress}}/company/{{CompanyId}}
 Accept: application/json

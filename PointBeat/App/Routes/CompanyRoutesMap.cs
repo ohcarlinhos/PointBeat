@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PointBeat.App.Entities;
 using PointBeat.App.Interfaces;
+using PointBeat.App.Validators;
 using Raven.Client.Documents;
 
 namespace PointBeat.App.Routes;
@@ -9,22 +10,17 @@ public abstract class CompanyRoutesMap : IRoutesMap
 {
     public static void Handle(WebApplication app)
     {
-        app.MapPost("/company", (IDocumentStore store, [FromBody] CompanyDto dto) =>
+        app.MapPost("/company", (IDocumentStore store, [FromBody] Company company) =>
         {
+            var result = new CompanyValidator().Validate(company);
+            if (!result.IsValid) return Results.BadRequest(result.Errors);
+
             var session = store.OpenSession();
-            var company = new Company
-            {
-                Name = dto.Name, Address = new Address
-                {
-                    Street = dto.AddressStreet,
-                    Number = dto.AddressNumber
-                },
-            };
 
             session.Store(company);
             session.SaveChanges();
 
-            return Results.Created($"/company/{Uri.UnescapeDataString(company.Id)}", company);
+            return Results.Created($"/company/{Uri.EscapeDataString(company.Id!)}", company);
         }).WithTags("Company");
 
         app.MapGet("/company", (IDocumentStore store) =>
