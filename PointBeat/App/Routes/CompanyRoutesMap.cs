@@ -12,7 +12,14 @@ public abstract class CompanyRoutesMap : IRoutesMap
         app.MapPost("/company", (IDocumentStore store, [FromBody] CompanyDto dto) =>
         {
             var session = store.OpenSession();
-            var company = new Company { Name = dto.Name, };
+            var company = new Company
+            {
+                Name = dto.Name, Address = new Address
+                {
+                    Street = dto.AddressStreet,
+                    Number = dto.AddressNumber
+                },
+            };
 
             session.Store(company);
             session.SaveChanges();

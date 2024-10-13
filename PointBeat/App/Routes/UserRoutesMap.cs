@@ -14,7 +14,7 @@ public abstract class UserRoutesMap : IRoutesMap
             var session = store.OpenSession();
             var user = new User
             {
-                Name = dto.Name, Email = dto.Email, Address = new()
+                Name = dto.Name, Email = dto.Email, Address = new Address
                 {
                     Street = dto.AddressStreet,
                     Number = dto.AddressNumber,

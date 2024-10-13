@@ -21,3 +21,24 @@ Accept: application/json
 ###
 DELETE {{HostAddress}}/users/{{UserId}}
 Accept: application/json
+
+###
+POST {{HostAddress}}/company/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Carlos Roberto",
+  "address": {
+    "street": "Rua da Saudade",
+    "number": 123
+  }
+}
+
+###
+GET {{HostAddress}}/company/
+Accept: application/json
+
+###
+GET {{HostAddress}}/company/{{CompanyId}}
+Accept: application/json
