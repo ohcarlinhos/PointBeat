@@ -38,6 +38,19 @@ Content-Type: application/json
 }
 
 ###
+PUT {{HostAddress}}/company/{{QueryCompanyId}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Carlinhos 2 Tech Solutions LTDA",
+  "address": {
+    "street": "Rua da Saudade 2",
+    "number": 123
+  }
+}
+
+###
 GET {{HostAddress}}/company/
 Accept: application/json
 
@@ -63,13 +76,13 @@ Content-Type: application/json
 }
 
 ###
-GET {{HostAddress}}/company/
+GET {{HostAddress}}/points/
 Accept: application/json
 
 ###
-GET {{HostAddress}}/company/{{CompanyId}}
+GET {{HostAddress}}/points/{{PointQueryId}}
 Accept: application/json
 
 ###
-DELETE {{HostAddress}}/company/{{CompanyId}}
+DELETE {{HostAddress}}/points/{{PointQueryId}}
 Accept: application/json

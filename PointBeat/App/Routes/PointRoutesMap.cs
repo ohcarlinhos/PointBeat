@@ -18,7 +18,8 @@ public abstract class PointRoutesMap : IRoutesMap
 
             var session = store.OpenSession();
 
-            if (!session.Query<User>().Any(e => e.Id == dto.UserId)) return Results.NotFound("user_not_found");
+            if (!session.Query<User>().Any(e => e.Id == dto.UserId))
+                return Results.NotFound("user_not_found");
             if (!session.Query<Company>().Any(e => e.Id == dto.CompanyId))
                 return Results.NotFound("company_not_found");
 
@@ -28,7 +29,7 @@ public abstract class PointRoutesMap : IRoutesMap
                 UserId = dto.UserId,
                 CompanyId = dto.CompanyId
             };
-            
+
             session.Store(point);
             session.SaveChanges();
 
