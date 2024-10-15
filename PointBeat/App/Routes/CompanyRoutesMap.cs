@@ -23,6 +23,25 @@ public abstract class CompanyRoutesMap : IRoutesMap
             return Results.Created($"/company/{Uri.EscapeDataString(company.Id!)}", company);
         }).WithTags("Company");
 
+        app.MapPut("/company/{id}", (IDocumentStore store, string id, [FromBody] Company company) =>
+        {
+            var result = new CompanyValidator().Validate(company);
+            if (!result.IsValid) return Results.BadRequest(result.Errors);
+
+            var session = store.OpenSession();
+
+            var companyDb = session.Load<Company>(Uri.UnescapeDataString(id));
+            if (companyDb == null) return Results.NotFound("company_not_found");
+
+            companyDb.Name = company.Name;
+            companyDb.Address = company.Address;
+
+            session.Store(companyDb);
+            session.SaveChanges();
+
+            return Results.Ok(companyDb);
+        });
+
         app.MapGet("/company", (IDocumentStore store) =>
         {
             var session = store.OpenSession();
@@ -32,7 +51,8 @@ public abstract class CompanyRoutesMap : IRoutesMap
         app.MapGet("/company/{id}", (IDocumentStore store, string id) =>
         {
             var session = store.OpenSession();
-            var company = session.Load<Point>(Uri.UnescapeDataString(id));
+            var company = session.Load<Company>(Uri.UnescapeDataString(id));
+
             return company != null ? Results.Ok(company) : Results.NotFound();
         }).WithTags("Company");
 
